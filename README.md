@@ -1,2 +1,7 @@
-# sphere_cpp_autumn_2020
-Technosphere 1 semester. C++ lectures and hometasks.
+# msu_cpp_autumn_2020
+
+## Лекции по c++ 2020
+
+[Видеолекции](https://www.youtube.com/watch?v=YXbrMny86U0&list=PLrCZzMib1e9qjGLjg83bCksf3N7FIy7jg)
+
+### hometasks
