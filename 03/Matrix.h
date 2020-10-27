@@ -28,8 +28,12 @@ class Matrix {
     bool operator==(const Matrix &) const;
     bool operator!=(const Matrix &) const;
 
+    Matrix operator=(const Matrix &);
+    Matrix(const Matrix &);
+    Matrix();
+
     private:
-    size_t rows;
-    size_t cols;
-    int * m;
+    size_t rows = 0;
+    size_t cols = 0;
+    int * m = nullptr;
 };
