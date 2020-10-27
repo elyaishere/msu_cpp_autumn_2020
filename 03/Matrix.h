@@ -31,6 +31,7 @@ class Matrix {
     Matrix operator=(const Matrix &);
     Matrix(const Matrix &);
     Matrix();
+    int * getMatrix() const;
 
     private:
     size_t rows = 0;
