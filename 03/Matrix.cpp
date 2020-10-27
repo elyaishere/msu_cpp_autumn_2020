@@ -2,9 +2,13 @@
 #include <stdexcept>
 #include <iomanip>
 
-Matrix::Matrix(size_t r=0, size_t c=0): rows(r), cols(c) {
+Matrix::Matrix(size_t r, size_t c): rows(r), cols(c) {
+    if (r <= 0 || c <= 0)
+        throw std::invalid_argument("Некорректный размер матрицы!");
     m = new int[rows * cols]();
 }
+
+Matrix::Matrix() {}
 
 Matrix::~Matrix() {
     delete [] m;
@@ -56,6 +60,7 @@ Matrix & Matrix::operator*=(int num) {
 }
 
 std::ostream& operator<<(std::ostream & out, const Matrix & m) {
+    if (m.rows * m.cols == 0) return out;
     out.width(8);
     for (size_t i = 0; i < m.rows; ++i) {
         for (size_t j = 0; j < m.cols; ++j) {
@@ -88,4 +93,27 @@ bool Matrix::operator==(const Matrix & other) const {
 }
 bool Matrix::operator!=(const Matrix & other) const {
     return !(*this == other);
+}
+
+Matrix Matrix::operator=(const Matrix & other) {
+    delete[] m;
+
+    rows = other.getRows();
+    cols = other.getColumns();
+    m = new int[rows * cols]();
+
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < cols; ++j)
+            (*this)[i][j] = other[i][j];
+
+    return *this;
+}
+    
+Matrix::Matrix(const Matrix & other): rows(other.getRows()), cols(other.getColumns()) {
+    delete[] m;
+    m = new int[rows * cols]();
+
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < cols; ++j)
+            (*this)[i][j] = other[i][j];
 }
