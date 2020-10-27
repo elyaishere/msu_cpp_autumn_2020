@@ -112,7 +112,7 @@ Matrix Matrix::operator=(const Matrix & other) {
     return *this;
 }
 
-int * Matrix::getMatrix() const {
+int const * Matrix::getMatrix() const {
     return m;
 }
     
