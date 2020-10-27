@@ -45,7 +45,7 @@ Matrix::proxy  Matrix::operator[](size_t i) {
     return proxy(*this, i);
 }
 
-Matrix::proxy const   Matrix::operator[](size_t i) const {
+Matrix::proxy const Matrix::operator[](size_t i) const {
     if (i >= rows || i < 0)
         throw std::out_of_range("Некорректный номер строки!");
     return proxy(*this, i);
@@ -83,6 +83,7 @@ Matrix Matrix::operator+(const Matrix & other) const{
 }
 
 bool Matrix::operator==(const Matrix & other) const {
+    if (m == other.getMatrix()) return true;
     if (other.getColumns() != cols || other.getRows() != rows)
         return false;
     for (size_t i = 0; i < rows; ++i)
@@ -96,7 +97,9 @@ bool Matrix::operator!=(const Matrix & other) const {
 }
 
 Matrix Matrix::operator=(const Matrix & other) {
-    delete[] m;
+    if (m == other.getMatrix()) return *this;
+
+    if (m) delete[] m;
 
     rows = other.getRows();
     cols = other.getColumns();
@@ -108,9 +111,12 @@ Matrix Matrix::operator=(const Matrix & other) {
 
     return *this;
 }
+
+int * Matrix::getMatrix() const {
+    return m;
+}
     
 Matrix::Matrix(const Matrix & other): rows(other.getRows()), cols(other.getColumns()) {
-    delete[] m;
     m = new int[rows * cols]();
 
     for (size_t i = 0; i < rows; ++i)
