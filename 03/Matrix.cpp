@@ -98,13 +98,14 @@ bool Matrix::operator!=(const Matrix & other) const {
 
 Matrix Matrix::operator=(const Matrix & other) {
     if (m == other.getMatrix()) return *this;
+    
+    rows = other.getRows();
+    cols = other.getColumns();
+    int * ptr = new int[rows * cols]()
 
     if (m) delete[] m;
 
-    rows = other.getRows();
-    cols = other.getColumns();
-    m = new int[rows * cols]();
-
+    m = ptr
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < cols; ++j)
             (*this)[i][j] = other[i][j];
