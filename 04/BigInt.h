@@ -5,7 +5,6 @@
 
 class BigInt {
     public:
-    public:
     BigInt(int);
     BigInt(const BigInt &);
     BigInt(BigInt &&);
