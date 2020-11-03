@@ -38,7 +38,7 @@ class BigInt {
     friend bool operator<(const int, const BigInt&);
     friend bool operator>(const int, const BigInt&);
 
-    //private:
+    private:
     size_t size = 0;
     int * num = nullptr;
     bool sign = 0;
