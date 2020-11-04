@@ -237,24 +237,30 @@ BigInt makeSum (const BigInt & a, const BigInt & b) { // return (sign)(a + b)
 }
 
 BigInt makeDif (const BigInt & a, const BigInt & b) { // return (a - b)
-    BigInt c;
     if (b > a) {
+        BigInt c;
         c = makeDif(b, a);
         c.sign = 1;
         return c;
     }
     else {
+        BigInt c;
         c = a;
-        int i = b.size - 1;
-        while (i >= 0) {
+        int i = 0;
+        while (i < b.size) {
             c.num[i] -= b.num[i];
             if (c.num[i] < 0) {
                 c.num[i+1] -= 1;
                 c.num[i] += c.base;
             }
-            --i;
+            ++i;
         }
-        if (c.num[c.size - 1] == 0 && c.size > 1) c.size -= 1; 
+        while ((i < c.size - 1) && c.num[i] < 0) {
+            c.num[i+1] -= 1;
+            c.num[i] += c.base;
+            ++i;
+        }
+        while (c.num[c.size - 1] == 0 && c.size > 1) c.size -= 1; 
         return c;
     }
 }
