@@ -69,7 +69,7 @@ void Cmp () {
     if (!(BigInt(-999999) < 0)){
         ++error_count;
     }
-    if (!(BigInt(123) == 123)){
+    if (!(- BigInt(123) == -123)){
         ++error_count;
     }
     if (!(BigInt(45) >= 45)){
