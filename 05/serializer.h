@@ -1,6 +1,7 @@
 #pragma once
 #include <ostream>
 #include <cstdint>
+#include <istream>
 
 enum class Error
 {
