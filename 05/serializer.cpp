@@ -30,7 +30,9 @@ Error Deserializer::process(uint64_t& val) {
     in_ >> token;
     try {
         val = std::stoull(token);
-    } catch (...) {
+    } catch (std::invalid_argument) {
+        return Error::CorruptedArchive;
+    } catch (std::out_of_range) {
         return Error::CorruptedArchive;
     }
     return Error::NoError;
