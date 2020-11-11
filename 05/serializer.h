@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include <cstdint>
 
 enum class Error
 {
@@ -23,7 +24,7 @@ public:
     template <class... ArgsT>
     Error operator()(ArgsT&&... args)
     {
-        return process(args...);
+        return process(std::forward<ArgsT>(args)...);
     }
     
 private:
@@ -42,7 +43,7 @@ private:
         switch (err) {
             case Error::NoError:
                 out_ << Separator;
-                return process(args...);
+                return process(std::forward<Args>(args)...);
             default:
                 return err;
         }
@@ -65,7 +66,7 @@ public:
     template <class... ArgsT>
     Error operator()(ArgsT&&... args)
     {
-        return process(args...);
+        return process(std::forward<ArgsT>(args)...);
     }
     
 private:
@@ -83,7 +84,7 @@ private:
         const Error err = process(val);
         switch (err) {
             case Error::NoError:
-                return process(args...);
+                return process(std::forward<Args>(args)...);
             default:
                 return err;
         }
