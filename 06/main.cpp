@@ -14,7 +14,7 @@ int main()
         try {
             auto text = format("Missing {} index", '?');
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Wrong value inside {}";
             assert(e.what() == what);
         }
@@ -25,7 +25,7 @@ int main()
         try {
             auto text = format("Wrong {20} index", 'x');
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Wrong value inside {}";
             assert(e.what() == what);
         }
@@ -36,7 +36,7 @@ int main()
         try {
             auto text = format("Too much {0} {1} indices", 0);
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Wrong value inside {}";
             assert(e.what() == what);
         }
@@ -47,7 +47,7 @@ int main()
         try {
             auto text = format("Too much { {} {0} {1}", 0);
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Double {";
             assert(e.what() == what);
         }
@@ -58,7 +58,7 @@ int main()
         try {
             auto text = format("Too much {0} } {1}", 0);
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Unexpected }";
             assert(e.what() == what);
         }
@@ -69,7 +69,7 @@ int main()
         try {
             auto text = format("Not enough {0} {", 0);
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Expected }";
             assert(e.what() == what);
         }
@@ -92,7 +92,7 @@ int main()
         try {
             auto text = format("No format but wrong {}");
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Unexpected bracket";
             assert(e.what() == what);
         }
@@ -103,10 +103,17 @@ int main()
         try {
             auto text = format("Is {it} an index?", "no");
             assert(0 == 1);
-        } catch (const std::exception & e) {
+        } catch (const Error & e) {
             std::string what = "Wrong value inside {}";
             assert(e.what() == what);
         }
+    }
+
+    // test 12
+    {
+        std::string secret("The truth is out there");
+        auto text = format("{0}... and it hurts", secret);
+        assert(text == "The truth is out there... and it hurts");
     }
     
     std::cout << "All tests passed" << std::endl;
