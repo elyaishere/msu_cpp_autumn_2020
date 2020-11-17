@@ -21,7 +21,7 @@ class Base {
 template <class T>
 class Arg: public Base {
     public:
-        Arg (T a): arg(a) {}
+        Arg (const T& a): arg(a) {}
         virtual ~Arg () {}
         virtual void to_stream(std::ostringstream & out) {
             out << arg;
