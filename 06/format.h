@@ -3,6 +3,14 @@
 #include <vector>
 #include <sstream>
 
+struct Error {
+    std::string message;
+    Error (const std::string mes): message(mes) {}
+    std::string what() const {
+        return message;
+    }
+};
+
 class Base {
     public:
         Base () {}
@@ -34,19 +42,19 @@ struct ArgsList {
 };
 
 template <class T>
-void process(ArgsList& arg_list, T arg) {
+void process(ArgsList& arg_list, T&& arg) {
     arg_list.args.push_back(new Arg<T>(arg));
 }
 
 template <class T, class... Args>
-void process(ArgsList& args_list, T arg, Args&&... args) {
+void process(ArgsList& args_list, T&& arg, Args&&... args) {
     process(args_list, arg);
     process(args_list, std::forward<Args>(args)...);
 }
 
 std::string format(const std::string & str) {
     for (auto i: str)
-        if (i == '{' || i == '}') throw std::runtime_error("Unexpected bracket");
+        if (i == '{' || i == '}') throw Error("Unexpected bracket");
     return str;
 }
 
@@ -58,15 +66,15 @@ std::string format(const std::string & str, Args&&... args) {
     std::ostringstream res;
     size_t sz = str.size();
     bool flag = false;
-    std::string buffer;
-    std:: string buffer1;
+    std::string index;
+    std:: string buffer;
 
     for (size_t i = 0; i < sz; ++i) {
         if (flag) { // внутри скобок
             if (str[i] == '}') {
                 try
                 {
-                    auto num = std::stoull(buffer);
+                    auto num = std::stoull(index);
                     if (num >= args_list.args.size())
                         throw std::logic_error("");
                     args_list.args[num] -> to_stream(res);
@@ -75,35 +83,35 @@ std::string format(const std::string & str, Args&&... args) {
                 }
                 catch(const std::logic_error& e)
                 {
-                    throw std::runtime_error("Wrong value inside {}");
+                    throw Error("Wrong value inside {}");
                 }
                 
             }
 
             if (str[i] == '{') {
-                throw std::runtime_error("Double {");
+                throw Error("Double {");
             }
 
-            buffer += str[i];
+            index += str[i];
             continue;
         }
         // вне скобок
         if (str[i] == '{') {
-            res << buffer1;
-            buffer1 = "";
-            flag = true;
+            res << buffer;
             buffer = "";
+            flag = true;
+            index = "";
             continue;
         }
         if (str[i] == '}') {
-            throw std::runtime_error("Unexpected }");
+            throw Error("Unexpected }");
         }
-        buffer1 += str[i];
+        buffer += str[i];
     }
     if (flag) {
-        throw std::runtime_error("Expected }");
+        throw Error("Expected }");
     }
-    if (buffer1 != "") res << buffer1;
+    if (buffer != "") res << buffer;
 
     return res.str();
 }
