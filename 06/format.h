@@ -5,7 +5,7 @@
 
 struct Error {
     std::string message;
-    Error (const std::string mes): message(mes) {}
+    Error (const std::string& mes): message(mes) {}
     std::string what() const {
         return message;
     }
@@ -67,7 +67,7 @@ std::string format(const std::string & str, Args&&... args) {
     size_t sz = str.size();
     bool flag = false;
     std::string index;
-    std:: string buffer;
+    std::string buffer;
 
     for (size_t i = 0; i < sz; ++i) {
         if (flag) { // внутри скобок
