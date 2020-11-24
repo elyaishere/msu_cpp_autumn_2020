@@ -83,7 +83,7 @@ class vector {
     void reserve(size_t new_capacity) {
         if (_capacity < new_capacity) {
             T* new_data = alloc.allocate(new_capacity);
-            for (size_t i = 0; i < size; ++i) 
+            for (size_t i = 0; i < _size; ++i) 
                 new_data[i] = std::move(data[i]);
             if (data != nullptr)
                 alloc.deallocate(data);
