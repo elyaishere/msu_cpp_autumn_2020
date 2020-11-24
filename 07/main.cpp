@@ -18,6 +18,7 @@ int main()
         for (auto i: numbers)
             assert(i == 2*(j++));
     }
+    
     // test 2
     {
         vector<int> numbers;
@@ -112,6 +113,35 @@ int main()
         v.resize(0);
         assert(v.size() == 0);
         assert(v.begin() == v.end());
+    }
+    // test 9
+    {  
+        vector<int> v1(1);
+        v1[0] = 1;
+        v1.reserve(4);
+        vector<int> v2(v1); // copy constructor
+        assert(v2[0] == v1[0]);
+        assert(v1.size() == v2.size());
+        assert(v2.capacity() != v1.capacity());
+        vector<int> v3(std::move(v1)); // move constructor
+        assert(v3.size() == 1);
+        assert(v3[0] == v2[0]);
+        assert(v1.begin() == v1.end());
+        v2.push_back(2);
+        v3 = v2;  // copy assignment
+        assert(v3.size() == v2.size());
+        assert(v3[0] == v2[0]);
+        assert(v3[1] == v2[1]);
+        assert(v3.capacity() != v2.capacity());
+        v3 = v3;  // self assignment
+        assert(v3.size() == 2);
+        assert(v3[0] == v2[0]);
+        assert(v3[1] == v2[1]);
+        v2.pop_back();
+        v3 = std::move(v2); // move assignment
+        assert(v3.size() == 1);
+        assert(v3[0] == 1);
+        assert(v2.begin() == v2.end());
     }
     std::cout << "All tests passed" << std::endl;
     return 0;
