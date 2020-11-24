@@ -14,6 +14,38 @@ class vector {
     ~vector() {
         alloc.deallocate(data);
     }
+    vector(const vector& v): _size(v._size), _capacity(v._size) {
+        data = alloc.allocate(_capacity);
+        for (size_t i = 0; i < _size; ++i)
+            data[i] = v.data[i];
+    }
+    vector(vector&& v): _size(v._size), _capacity(v._capacity) {
+        data = v.data;
+        v.data = nullptr;
+        v._size = 0;
+        v._capacity = 0;
+    }
+    vector& operator=(const vector& v) {
+        if (data == v.data) return *this;
+        alloc.deallocate(data);
+        _size = v._size;
+        _capacity = v._size;
+        data = alloc.allocate(_size);
+        for (size_t i = 0; i < _size; ++i)
+            data[i] = v.data[i];
+        return *this;
+    }
+    vector& operator=(vector&& v) {
+        if (data == v.data) return *this;
+        alloc.deallocate(data);
+        _size = v._size;
+        _capacity = v._capacity;
+        data = v.data;
+        v.data = nullptr;
+        v._size = 0;
+        v._capacity = 0;
+        return *this;
+    }
     //--------------------------
     // iterators
     iterator<T> begin() noexcept {
@@ -51,8 +83,8 @@ class vector {
     void reserve(size_t new_capacity) {
         if (_capacity < new_capacity) {
             T* new_data = alloc.allocate(new_capacity);
-            for (size_t i = 0 ; i < _size; ++i)
-                new_data[i] = data[i];
+            for (size_t i = 0; i < size; ++i) 
+                new_data[i] = std::move(data[i]);
             if (data != nullptr)
                 alloc.deallocate(data);
             data = new_data;
