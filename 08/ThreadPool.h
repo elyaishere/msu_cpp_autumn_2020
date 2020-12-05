@@ -5,6 +5,7 @@
 #include <future>
 #include <queue>
 #include <thread>
+//#include <iostream>
 
 using task = std::function<void ()>;
 
@@ -16,36 +17,42 @@ public:
     ThreadPool& operator=(ThreadPool&&) = delete;
 
     explicit ThreadPool(size_t poolSize): not_done(true) {
+        //std::cout << "construct" << std::endl;
         for (size_t i = 0; i < poolSize; ++i) {
         threads.emplace_back([this]() {
             while (not_done) {
-                std::unique_lock<std::mutex> lock(this->mutex);
+                {
+                    std::unique_lock<std::mutex> lock(mutex);
+                    while (tqueue.empty() && not_done)
+                        cond.wait(lock);
+                }
+                mutex.lock();
                 if (!tqueue.empty()) {
                     auto next_task = std::move(tqueue.front());
                     tqueue.pop();
-                    lock.unlock();
+                    mutex.unlock();
                     next_task();
-                    }
-                    else {
-                        cond.wait(lock);
-                    }
                 }
+                else {
+                    mutex.unlock();
+                    continue;
+                }
+            }
             });
         }  
     }
 
     ~ThreadPool() {
+        //std::cout << "decstruct" << std::endl;
         not_done = false;
         cond.notify_all();
         for (auto& thr : threads) {
-            if (thr.joinable()) {
-                thr.join();
-            }
+            thr.join();
         }
     }
-
     template <class Func, class... Args>
     auto exec(Func func, Args... args) -> std::future<decltype(func(args...))> {
+        //std::cout << "exec" << std::endl;
         using rettype = decltype(func(args...));
         auto new_task = std::make_shared<std::packaged_task<rettype ()>>([func, args...]() {
             return func(args...);
