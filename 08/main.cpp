@@ -4,9 +4,9 @@
 #include <cassert>
 
 int main() {
-    ThreadPool pool(8);
     // test 1 
     {
+        ThreadPool pool(8);
         struct A {
             int a = 5;
         };
@@ -21,6 +21,7 @@ int main() {
     
     // test 2
     {
+        ThreadPool pool(8);
         auto boo = [](int x) { return x*x; };
         auto task = pool.exec(boo, 25);
         assert(task.get() == 25*25);
