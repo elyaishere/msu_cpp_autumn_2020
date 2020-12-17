@@ -170,7 +170,7 @@ bool check() {
 int main() {
     fSort("seq");
     tSort("seq");
-    assert(check() == 1);
+    assert(check());
     cout << "Test passed" << endl;
     return 0;
 }
